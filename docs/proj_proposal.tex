@@ -1,0 +1,243 @@
+% VLDB template version of 2020-03-05 enhances the ACM template, version 1.7.0:
+% https://www.acm.org/publications/proceedings-template
+% The ACM Latex guide provides further information about the ACM template
+
+\documentclass[sigconf, nonacm]{acmart}
+
+%% The following content must be adapted for the final version
+% paper-specific
+\newcommand\vldbdoi{XX.XX/XXX.XX}
+\newcommand\vldbpages{XXX-XXX}
+% issue-specific
+\newcommand\vldbvolume{14}
+\newcommand\vldbissue{1}
+\newcommand\vldbyear{2020}
+% should be fine as it is
+\newcommand\vldbauthors{\authors}
+\newcommand\vldbtitle{\shorttitle} 
+% leave empty if no availability url should be set
+\newcommand\vldbavailabilityurl{}
+
+\begin{document}
+\title{Project Proposal: How to build a secure URL shortener?}
+
+%%
+%% The "author" command and its associated commands are used to define the authors and their affiliations.
+\author{Akshay Nehe}
+\affiliation{%
+  \institution{Stony Brook University}
+}
+\email{anehe@cs.stonybrook.edu}
+
+\author{Vamshi Muthineni}
+\affiliation{%
+  \institution{Stony Brook University}
+}
+\email{vmuthineni@cs.stonybrook.edu}
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{comment}
+\begin{abstract}
+Praesent imperdiet, lacus nec varius placerat, est ex eleifend justo, a vulputate leo massa consectetur nunc. Donec posuere in mi ut tempus. Pellentesque sem odio, faucibus non mi in, laoreet maximus arcu. In hac habitasse platea dictumst. Nunc euismod neque eu urna accumsan, vitae vehicula metus tincidunt. Maecenas congue tortor nec varius pellentesque. Pellentesque bibendum libero ac dignissim euismod. Aliquam justo ante, pretium vel mollis sed, consectetur accumsan nibh. Nulla sit amet sollicitudin est. Etiam ullamcorper diam a sapien lacinia faucibus.
+\end{abstract}
+\end{comment}
+\maketitle
+
+
+\ifdefempty{\vldbavailabilityurl}{}{
+\vspace{.3cm}
+\begingroup\small\noindent\raggedright\textbf{Reviewer Details:}\\
+Name: AKSHAY D. NEHE || SBU ID: 112685023
+\endgroup
+}
+
+\section{Introduction}
+
+URL Shorteners are increasing in use with rising social media usage and online services. Communication platforms like Twitter, SMS, etc, have message size limits. Long URLs are a problem in such scenarios. The shortened URLs replace long cumbersome URLs, improving readability and convenience. On the other hand, they may mask the underlying destination and guide a user to an unexpected destination webpage. 
+
+Not long back, researchers have shown that short URLs were susceptible to brute-force attacks \cite{paper1} and ran the risk of exposing personal data of unsuspecting users. Since then, the majority of URL Shortening Services (referred as USS henceforth) have taken measures to protect against such attacks. We will review top 3 (by usage) USS and the security measures they have implemented. We will also look at the design factors to be considered when implementing such a service. We will attempt to quantify the secureness of a service based on certain metrics. This review will be of help to someone who is uninitiated in the topic of URL Shorteners. Also, it will serve as a guide to someone who needs to implement such a system. Lastly, we will implement an experimental setup to analyze shortened URLs. This setup will likely be a value addition for the research community. 
+
+\section{Related Work}
+
+There is ample research \cite{paper6} \cite{paper5} \cite{paper4} on new ways to secure URL shorteners. Some past research and experiments about security and privacy implications of USS are also available. However there is no consolidated review of current USS which will guide an uninitiated reader on how to go about implementing a USS. We present details on the basics of USS and how to build one yourself with optimal security features. 
+
+We do not see any work on quantifying the secureness of such services. We will attempt to extract metrics using an experimental setup and assign a secureness score to the services. 
+
+\section{Approach}
+
+We will perform a thorough review of available literature, tracing the history of USS and noting the events which led to changes. Understanding the triggers for change will make it easy to understand design decisions. This bottom-up approach will also serve as a good guide for any new reader, exposing the bare basics of USS. 
+
+Realizing the potential dangers arising from linkrot, the URLTeam project was initiated by archive.org \cite{link1}. This will be our primary source of shortened URLs over a time range. 
+
+We will use Apache Spark to analyze URLs and extract data points. We may run the risk of encountering computation and storage limitations and decide to limit our analysis within some limited time bounds or limit the domain of other features. However our experimental setup will be generic enough to work, resources permitting, at full scale. We will, for the purpose of this work, perform the experiments on our local hardware (think typical Macbook Pro) and, time permitting, transition to AWS compute nodes.
+
+\section{Experiments}
+
+We will use Apache Spark to parse through large volume (big data) of shortened URLs  from the archives. At the outset, we expect to analyze the following:
+\begin{enumerate}
+    \item what kind of links are shortened the most (zips, forms, etc) ?
+    
+    \item are the documents shared using shortened URLs password-protected ?
+\end{enumerate}
+
+\section{Evaluation metrics}
+
+Our preliminary analysis suggests the following metrics can be instrumental in quantifying the secureness of a USS:
+\begin{enumerate}
+    \item length of shortened URL (domain of values);
+    
+    \item density of characters from domain of characters;
+    
+    \item obfuscation of shortened URL (qualitative feature);
+\end{enumerate}
+
+In the past, USS have been proven to be susceptible to brute force attacks \cite{paper1}, including those generated by Google and Microsoft . One of the ways to solve this problem is by making the domain space of short URLs large enough to avoid brute-forcing but still short enough to remain viable. So we can measure the probability of susceptibility to being brute-forced and use that as a metric.
+
+There are some qualitative features that can be considered as well. Some USS use a timeout on the short URLs, similar to OTP in SMS. Some USS tradeoff length for clarity. This reduces the chances of masking underlying URL and luring a user to a blacklisted/unexpected website.
+
+\begin{thebibliography}{9}
+
+\bibitem{paper1} 
+Martin Georgiev, Vitaly Shmatikov.
+\textit{Gone in Six Characters: Short URLs Considered Harmful for Cloud Services}. 
+http://arxiv.org/abs/1604.02734
+
+\bibitem{paper2} 
+Alexander Neumann, Johannes Barnickel, Ulrike Meyer.
+\textit{Security and Privacy Implications of URL Shortening Services}. 
+Journal of Advances in Computer Networks, Vol. 3, No. 3, September 2015.
+
+\bibitem{paper3}
+ Sophie Le Page, Guy-Vincent Jourdan, Gregor V. Bochmann, Jason Flood, Iosif-Viorel Onut.
+\textit{Using URL shorteners to compare phishing and malware attacks}.
+2018 APWG Symposium on Electronic Crime Research (eCrime)
+
+\bibitem{blog1}
+Chris Dale.
+\textit{The Secrets in URL Shortening Services}.
+https://www.sans.org/blog/the-secrets-in-url-shortening-services/
+
+\bibitem{paper4} 
+Dr. Reem J. Ismail.
+\textit{Proposing a Secure URL Shortening Service by 
+using Blackboard Architecture }. 
+
+\bibitem{paper5}
+Hyung-Jin Mun, Yongzhen Li.
+\textit{Secure Short URL Generation Method that Recognizes Risk of Target URL}.
+Wireless Pers Commun (2017) 93:269–283.
+
+\bibitem{paper6}
+Simon Bell, Peter Komisarczuk.
+\textit{Measuring the Effectiveness of Twitter’s URL Shortener (t.co) at Protecting Users from Phishing and Malware Attacks}.
+ACSW '20: Proceedings of the Australasian Computer Science Week Multiconference.
+
+\bibitem{link1}
+https://www.archiveteam.org/index.php/URLTeam
+
+\end{thebibliography}
+
+\begin{comment}
+\subsection{Figures}
+
+Aliquam justo ante, pretium vel mollis sed, consectetur accumsan nibh. Nulla sit amet sollicitudin est. Etiam ullamcorper diam a sapien lacinia faucibus. Duis vulputate, nisl nec tincidunt volutpat, erat orci eleifend diam, eget semper risus est eget nisl. Donec non odio id neque pharetra ultrices sit amet id purus. Nulla non dictum tellus, id ullamcorper libero. Curabitur vitae nulla dapibus, ornare dolor in, efficitur enim. Cras fermentum facilisis elit vitae egestas. Nam vulputate est non tellus efficitur pharetra. Vestibulum ligula est, varius in suscipit vel, porttitor id massa. Nulla placerat feugiat augue, id blandit urna pretium nec. Nulla velit sem, tempor vel mauris ut, porta commodo quam \autoref{fig:duck}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/duck}
+  \caption{An illustration of a Mallard Duck. Picture from Mabel Osgood Wright, \textit{Birdcraft}, published 1897.}
+  \label{fig:duck}
+\end{figure}
+
+\begin{table*}[t]
+  \caption{A double column table.}
+  \label{tab:commands}
+  \begin{tabular}{ccl}
+    \toprule
+    A Wide Command Column & A Random Number & Comments\\
+    \midrule
+    \verb|\tabular| & 100& The content of a table \\
+    \verb|\table|  & 300 & For floating tables within a single column\\
+    \verb|\table*| & 400 & For wider floating tables that span two columns\\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\subsection{Tables}
+
+Curabitur vitae nulla dapibus, ornare dolor in, efficitur enim. Cras fermentum facilisis elit vitae egestas. Mauris porta, neque non rutrum efficitur, odio odio faucibus tortor, vitae imperdiet metus quam vitae eros. Proin porta dictum accumsan \autoref{tab:commands}.
+
+Duis cursus maximus facilisis. Integer euismod, purus et condimentum suscipit, augue turpis euismod libero, ac porttitor tellus neque eu enim. Nam vulputate est non tellus efficitur pharetra. Aenean molestie tristique venenatis. Nam congue pulvinar vehicula. Duis lacinia mollis purus, ac aliquet arcu dignissim ac \autoref{tab:freq}. 
+
+\begin{table}[hb]% h asks to places the floating element [h]ere.
+  \caption{Frequency of Special Characters}
+  \label{tab:freq}
+  \begin{tabular}{ccl}
+    \toprule
+    Non-English or Math & Frequency & Comments\\
+    \midrule
+    \O & 1 in 1000& For Swedish names\\
+    $\pi$ & 1 in 5 & Common in math\\
+    \$ & 4 in 5 & Used in business\\
+    $\Psi^2_1$ & 1 in 40\,000 & Unexplained usage\\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+Nulla sit amet enim tortor. Ut non felis lectus. Aenean quis felis faucibus, efficitur magna vitae. Curabitur ut mauris vel augue tempor suscipit eget eget lacus. Sed pulvinar lobortis dictum. Aliquam dapibus a velit.
+
+\subsection{Listings and Styles}
+
+Aenean malesuada fringilla felis, vel hendrerit enim feugiat et. Proin dictum ante nec tortor bibendum viverra. Curabitur non nibh ut mauris egestas ultrices consequat non odio.
+
+\begin{itemize}
+\item Duis lacinia mollis purus, ac aliquet arcu dignissim ac. Vivamus accumsan sollicitudin dui, sed porta sem consequat.
+\item Curabitur ut mauris vel augue tempor suscipit eget eget lacus. Sed pulvinar lobortis dictum. Aliquam dapibus a velit.
+\item Curabitur vitae nulla dapibus, ornare dolor in, efficitur enim.
+\end{itemize}
+
+Ut sagittis, massa nec rhoncus dignissim, urna ipsum vestibulum odio, ac dapibus massa lorem a dui. Nulla sit amet enim tortor. Ut non felis lectus. Aenean quis felis faucibus, efficitur magna vitae. 
+
+\begin{enumerate}
+\item Duis lacinia mollis purus, ac aliquet arcu dignissim ac. Vivamus accumsan sollicitudin dui, sed porta sem consequat.
+\item Curabitur ut mauris vel augue tempor suscipit eget eget lacus. Sed pulvinar lobortis dictum. Aliquam dapibus a velit.
+\item Curabitur vitae nulla dapibus, ornare dolor in, efficitur enim.
+\end{enumerate}
+
+Cras fermentum facilisis elit vitae egestas. Mauris porta, neque non rutrum efficitur, odio odio faucibus tortor, vitae imperdiet metus quam vitae eros. Proin porta dictum accumsan. Aliquam dapibus a velit. Curabitur vitae nulla dapibus, ornare dolor in, efficitur enim. Ut maximus mi id arcu ultricies feugiat. Phasellus facilisis purus ac ipsum varius bibendum.
+
+\subsection{Math and Equations}
+
+Curabitur vitae nulla dapibus, ornare dolor in, efficitur enim. Cras fermentum facilisis elit vitae egestas. Nam vulputate est non tellus efficitur pharetra. Vestibulum ligula est, varius in suscipit vel, porttitor id massa. Cras facilisis suscipit orci, ac tincidunt erat.
+\begin{equation}
+  \lim_{n\rightarrow \infty}x=0
+\end{equation}
+
+Sed pulvinar lobortis dictum. Aliquam dapibus a velit porttitor ultrices. Ut maximus mi id arcu ultricies feugiat. Phasellus facilisis purus ac ipsum varius bibendum. Aenean a quam at massa efficitur tincidunt facilisis sit amet felis. 
+\begin{displaymath}
+  \sum_{i=0}^{\infty} x + 1
+\end{displaymath}
+
+Suspendisse molestie ultricies tincidunt. Praesent metus ex, tempus quis gravida nec, consequat id arcu. Donec maximus fermentum nulla quis maximus.
+\begin{equation}
+  \sum_{i=0}^{\infty}x_i=\int_{0}^{\pi+2} f
+\end{equation}
+
+Curabitur vitae nulla dapibus, ornare dolor in, efficitur enim. Cras fermentum facilisis elit vitae egestas. Nam vulputate est non tellus efficitur pharetra. Vestibulum ligula est, varius in suscipit vel, porttitor id massa. Cras facilisis suscipit orci, ac tincidunt erat.
+
+
+\begin{acks}
+ This work was supported by the [...] Research Fund of [...] (Number [...]). Additional funding was provided by [...] and [...]. We also thank [...] for contributing [...].
+\end{acks}
+
+%\clearpage
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{sample}
+\end{comment}
+
+\end{document}
+\endinput
+
