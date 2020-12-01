@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel=stylesheet href="https://s3-us-west-2.amazonaws.com/colors-css/2.2.0/colors.min.css">
+    <style>
+        form {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            % border: 2px solid gray;
+            padding: 10px;
+        }
+    </style>
+    <title>URL Shortener v1</title>
+</head>
+<body class="bg-olive">
+<div class="center" >
+    <form method="POST" action="/enc" style="font-family: Arial, Helvetica, sans-serif;" >
+        <label>URL to Shorten: </label><input name="url" type="text" value="" />
+        <br><br>
+        <label for="version">Choose Version: </label>
+        <select name="version" id="version">
+            <option value="1">v1 - Simple index</option>
+            <option value="2">v2 - len 3 url, only small alphabets</option>
+            <option value="3">v3 - len 5 url, only small alphabets</option>
+            <option value="4">v4 - len 5 url, Alphanumeric both cases</option>
+        </select>
+        <br><br>
+        <input type="submit" value="submit" />
+    </form>
+</div>
+</body>
+</html>
