@@ -20,7 +20,11 @@ for this project:
 2. https://github.com/prologic/shorturl;
 
 
-### Git Notes (keep this section at end of doc)
+### URL Shortener specific Docs
+The presentation and demo video are available in docs directory.
+
+
+### Git Notes
 
 1. Create new branch and checkout: `git checkout -b <branch_name>`
 
