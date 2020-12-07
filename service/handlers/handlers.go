@@ -15,45 +15,6 @@ const (
 	numbers = "0123456789"
 )
 
-//type Page struct {
-//	Title string
-//	Body  []byte
-//}
-//
-//func loadPage(title string) (*Page, error) {
-//	filename := title + ".txt"
-//	body, err := ioutil.ReadFile("../static/" + filename)
-//	if err != nil {
-//		return nil, err
-//	}
-//	return &Page{Title: title, Body: body}, nil
-//}
-//
-//func EncodeHandler(storage storages.IStorage) http.Handler {
-//	handleFunc := func(w http.ResponseWriter, r *http.Request) {
-//		if url := r.PostFormValue("url"); url != "" {
-//			w.Write([]byte(storage.Save(url)))
-//		}
-//	}
-//
-//	return http.HandlerFunc(handleFunc)
-//}
-
-//func EncodeHandlers(w http.ResponseWriter, r *http.Request) {
-//	// title := r.URL.Path[len("/edit/"):]
-//	title := "EncodeVersion1"
-//	p, err := loadPage(title)
-//	if err != nil {
-//		p = &Page{Title: title}
-//	}
-//	fmt.Fprintf(w, "<h1>Editing %s</h1>"+
-//		"<form action=\"/save/%s\" method=\"POST\">"+
-//		"<textarea name=\"body\">%s</textarea><br>"+
-//		"<input type=\"submit\" value=\"Save\">"+
-//		"</form>",
-//		p.Title, p.Title, p.Body)
-//}
-
 // RandomString ...
 func RandomString(length int, alphabet string) string {
 	bytes := make([]byte, length)
@@ -83,39 +44,22 @@ func EncodeHandlers(storage storages.IStorage) http.Handler {
 			case "3":
 				res = storage.SaveCustom(url, RandomString(5, lowerAlphabets))
 			case "4":
-				res = storage.SaveCustom(url, RandomString(5, numbers+lowerAlphabets+upperAlphabets))
+				res = storage.SaveCustom(url, RandomString(5, lowerAlphabets+upperAlphabets))
+			case "5":
+				res = storage.SaveCustom(url, RandomString(5, lowerAlphabets+upperAlphabets+numbers))
 			default:
 				res = storage.Save(url)
 			}
-			// res = storage.Save(url)
-			// w.Write([]byte(storage.Save(url)))
 		}
-		newURL := "http://localhost:8080/red" + res
+		newURL := "http://localhost:8080/red/" + res
 		fmt.Fprintf(w, "Query URL = %s\n\n", url)
 		fmt.Fprintf(w, "Encoded URL = %s\n", newURL)
 
 		// TODO: Create a HTTP page to display the result URL.
-		//tmpStr := "<a href=\""+newURL+"\">Visit " + url + "!</a>"
-		//fmt.Fprintf(w, tmpStr)
 	}
 	return http.HandlerFunc(handleFunc)
 }
 
-// func EncodeHandlers(w http.ResponseWriter, r *http.Request) {
-//	if err := r.ParseForm(); err != nil {
-//		fmt.Fprintf(w, "ParseForm() err: %v", err)
-//		return
-//	}
-//	fmt.Fprintf(w, "POST request successful")
-//
-//	url := r.PostFormValue("url")
-//	if url != "" {
-//		w.Write([]byte(storage.Save(url)))
-//	}
-//
-//	fmt.Fprintf(w, "URL = %s\n", url)
-//	fmt.Fprintf(w, "Address = %s\n", address)
-// }
 
 func DecodeHandler(storage storages.IStorage) http.Handler {
 	handleFunc := func(w http.ResponseWriter, r *http.Request) {

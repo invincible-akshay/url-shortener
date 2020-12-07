@@ -18,21 +18,12 @@ func main() {
 	if err1 != nil {
 		log.Println(err1)
 	}
-	// dir, _ := homedir.Dir()
 	storage := &storages.Filesystem{}
-	// err := storage.Init(dir)
 	err := storage.Init(filepath.Join(dir, "tmp"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	//err := storage.Init(filepath.Join(dir, "service"))
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
-	// http.Handle("/", handlers.EncodeHandler(storage))
-	fileServer := http.FileServer(http.Dir("/Users/akshaydnehe/Documents/SBU/Sem_III/Labs/cse534/" +
-		"project/url-shortener/service/static")) // New code
+	fileServer := http.FileServer(http.Dir("project/url-shortener/service/static")) // New code
 	http.Handle("/", fileServer)
 	http.Handle("/enc", handlers.EncodeHandlers(storage))
 	http.Handle("/dec/", handlers.DecodeHandler(storage))
